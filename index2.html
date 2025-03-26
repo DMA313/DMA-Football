@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أبطال الدورة الرمضانية</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            text-align: center;
+            direction: rtl;
+            background: url('https://i.postimg.cc/d09GxWhc/image.png') no-repeat center center/cover;
+            color: white;
+        }
+        .overlay {
+            background: rgba(0, 0, 0, 0.6);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .container {
+            width: 900px;
+            margin: auto;
+            position: relative;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            box-shadow: 5px 5px 15px #000;
+            border-radius: 15px;
+        }
+        h1 {
+            font-size: 40px;
+            font-weight: bold;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            display: inline-block;
+            border-radius: 10px;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .player img {
+            width: 224px;
+            height: 224px;
+            border-radius: 50%;
+            margin: 10px;
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
+            border: 5px solid white;
+        }
+        .player img:hover {
+            transform: scale(1.2);
+        }
+        .nav-button {
+            font-size: 24px;
+            cursor: pointer;
+            background: #FFD700;
+            color: black;
+            padding: 10px 20px;
+            border-radius: 5px;
+            user-select: none;
+            transition: background 0.3s;
+            margin: 20px;
+            border: none;
+        }
+        .nav-button:hover {
+            background: #FFC107;
+        }
+        .nav-button:disabled {
+            background: #bbb;
+            cursor: not-allowed;
+        }
+        .fullscreen-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .fullscreen-overlay img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+
+    <h1>أبطال الدورة الرمضانية لكرة القدم</h1>
+
+    <div class="container">
+        <div class="page active" id="page1">
+            <div class="player">
+                <img src="https://i.postimg.cc/bJ0sd49Z/image.png" alt="المركز الأول" onclick="openFullscreen(this)">
+                <h2>المركز الأول</h2>
+                <p>Golf Team</p>
+            </div>
+        </div>
+
+        <div class="page" id="page2">
+            <div class="player">
+                <img src="https://i.postimg.cc/J067k8Dz/image.png" alt="المركز الثاني" onclick="openFullscreen(this)">
+                <h2>المركز الثاني</h2>
+                <p>البيت الأبيض</p>
+            </div>
+        </div>
+
+        <div class="page" id="page3">
+            <div class="player">
+                <img src="https://i.postimg.cc/HxNPcPWC/image.png" alt="المركز الثالث" onclick="openFullscreen(this)">
+                <h2>المركز الثالث</h2>
+                <p>TITANS Team</p>
+            </div>
+        </div>
+
+        <div class="page" id="page4">
+            <div class="player">
+                <img src="https://i.postimg.cc/HnGRvPq9/image.png" alt="أفضل حارس مرمى" onclick="openFullscreen(this)">
+                <h2>أفضل حارس مرمى</h2>
+                <p>محمود الحنفى</p>
+            </div>
+        </div>
+
+        <div class="page" id="page5">
+            <div class="player">
+                <img src="https://i.postimg.cc/5N2SdmfB/image.png" alt="أفضل لاعب" onclick="openFullscreen(this)">
+                <h2>أفضل لاعب</h2>
+                <p>أحمد رضا</p>
+            </div>
+        </div>
+
+        <div class="page" id="page6">
+            <div class="player">
+                <img src="https://i.postimg.cc/nzVCj0RT/image.png" alt="أفضل أخلاق" onclick="openFullscreen(this)">
+                <h2>أفضل أخلاق</h2>
+                <p>يحيى عصام</p>
+            </div>
+        </div>
+
+        <div class="page" id="page7">
+            <div class="player">
+                <img src="https://i.postimg.cc/cJFdjZhM/image.png" alt="هداف البطولة" onclick="openFullscreen(this)">
+                <h2>هداف البطولة</h2>
+                <p>أحمد الاتربى</p>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <button class="nav-button" id="prevBtn" onclick="changePage(-1)" disabled>السابق</button>
+        <button class="nav-button" id="nextBtn" onclick="changePage(1)">التالي</button>
+    </div>
+
+    <div class="fullscreen-overlay" id="fullscreenOverlay" onclick="closeFullscreen()">
+        <img id="fullscreenImage" src="" alt="Fullscreen Image">
+    </div>
+
+    <script>
+        let currentPage = 0;
+        const pages = document.querySelectorAll('.page');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const fullscreenOverlay = document.getElementById('fullscreenOverlay');
+        const fullscreenImage = document.getElementById('fullscreenImage');
+
+        function changePage(direction) {
+            pages[currentPage].classList.remove('active');
+            currentPage += direction;
+
+            prevBtn.disabled = currentPage === 0;
+            nextBtn.disabled = currentPage === pages.length - 1;
+
+            pages[currentPage].classList.add('active');
+        }
+
+        function openFullscreen(img) {
+            fullscreenImage.src = img.src;
+            fullscreenOverlay.style.display = "flex";
+        }
+
+        function closeFullscreen() {
+            fullscreenOverlay.style.display = "none";
+        }
+
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Escape") {
+                closeFullscreen();
+            }
+        });
+    </script>
+</body>
+</html>
